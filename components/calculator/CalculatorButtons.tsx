@@ -1,7 +1,7 @@
 import { FunctionComponent, MouseEventHandler } from "react";
 import styled from "@emotion/styled";
 import { grey, blue } from "../colors";
-import { Button } from "@mui/material";
+import { Button, ButtonTypeMap } from "@mui/material";
 
 export type ButtonsProps = {
   pushAction: Function;
@@ -9,6 +9,14 @@ export type ButtonsProps = {
   compute: MouseEventHandler;
   clearInput: MouseEventHandler;
 };
+
+const globalButtonProps: ButtonTypeMap<{}, "button"> = ({
+  sx: { margin: 0.5 },
+  variant: "contained",
+  color: "info",
+  disableElevation: true,
+  href: "#"
+} as unknown) as ButtonTypeMap<{}, "button">;
 
 export const CalculatorButtons: FunctionComponent<ButtonsProps> = ({
   pushInput,
@@ -22,113 +30,64 @@ export const CalculatorButtons: FunctionComponent<ButtonsProps> = ({
       .map((value, index) => (
         <Button
           key={index}
-          sx={{ margin: 0.5 }}
-          variant="contained"
-          color="info"
-          disableElevation
+          {...globalButtonProps}
           onClick={() => pushInput(String(value))}
           onKeyDown={e => pushInput(e.key as string)}
-          href="#"
         >
           {value}
         </Button>
       ))}
-    <Button
-      sx={{ margin: 0.5 }}
-      variant="contained"
-      color="info"
-      disableElevation
-      onClick={() => pushInput(".")}
-      href="#"
-    >
+    <Button {...globalButtonProps} onClick={() => pushInput(".")}>
       .
     </Button>
-    <Button
-      sx={{ margin: 0.5 }}
-      variant="contained"
-      color="info"
-      disableElevation
-      onClick={() => pushInput("-")}
-      href="#"
-    >
+    <Button {...globalButtonProps} onClick={() => pushInput("-")}>
       -
     </Button>
 
     <br />
     <Button
-      sx={{ margin: 0.5 }}
-      variant="contained"
-      color="secondary"
-      disableElevation
+      {...{ ...globalButtonProps, color: "secondary" }}
       onClick={() => pushAction("add")}
-      href="#"
     >
       +
     </Button>
 
     <Button
-      sx={{ margin: 0.5 }}
-      variant="contained"
-      color="secondary"
-      disableElevation
+      {...{ ...globalButtonProps, color: "secondary" }}
       onClick={() => pushAction("subtract")}
-      href="#"
     >
       -
     </Button>
 
     <Button
-      sx={{ margin: 0.5 }}
-      variant="contained"
-      color="secondary"
-      disableElevation
+      {...{ ...globalButtonProps, color: "secondary" }}
       onClick={() => pushAction("multiply")}
-      href="#"
     >
       x
     </Button>
 
     <Button
-      sx={{ margin: 0.5 }}
-      variant="contained"
-      color="secondary"
-      disableElevation
+      {...{ ...globalButtonProps, color: "secondary" }}
       onClick={() => pushAction("divide")}
-      href="#"
     >
       ÷
     </Button>
 
     <Button
-      sx={{ margin: 0.5 }}
-      variant="contained"
-      color="secondary"
-      disableElevation
+      {...{ ...globalButtonProps, color: "secondary" }}
       onClick={() => pushAction("modulo")}
-      href="#"
     >
       %
     </Button>
 
     <Button
-      sx={{ margin: 0.5 }}
-      variant="contained"
-      color="secondary"
-      disableElevation
+      {...{ ...globalButtonProps, color: "secondary" }}
       onClick={clearInput}
-      href="#"
     >
       AC
     </Button>
 
-    <Button
-      sx={{ margin: 0.5 }}
-      variant="contained"
-      color="primary"
-      disableElevation
-      onClick={compute}
-      href="#"
-    >
+    <Button {...{ ...globalButtonProps, color: "primary" }} onClick={compute}>
       =
     </Button>
   </Container>

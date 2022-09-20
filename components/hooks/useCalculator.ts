@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useState, MouseEventHandler } from "react";
-import { reduce, add, subtract, multiply, divide, modulo, concat } from "ramda";
+import { useCallback, useState, MouseEventHandler } from "react";
+import { is, add, subtract, multiply, divide, modulo, concat } from "ramda";
+import isNumber from "is-number";
 
 export enum Operations {
   ADD = "add",
@@ -39,7 +40,7 @@ export const useCalculator = () => {
     ])
   };
 
-  const validateKeyPress = (key: string) => /^([0-9]*|\+|-|\/|\*|x|%|.|Enter|=|Backspace)$/.test(key)
+  const validateKeyPress = (key: string) => isNumber(key) || /^(\+|-|\/|\*|x|%|\.|Enter|=|Backspace)$/.test(key)
 
   const pushAction = useCallback(
     (value: Operations) => {
@@ -58,6 +59,7 @@ export const useCalculator = () => {
 
   const pushInput = useCallback(
     (value: string) => {
+      console.log(validateKeyPress(value))
       if (validateKeyPress(value)) {
         switch (value) {
           case '+':

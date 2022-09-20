@@ -16,9 +16,6 @@ export const CalculatorButtons: FunctionComponent<ButtonsProps> = ({
   compute,
   clearInput
 }) => (<Container>
-  <Button sx={{ marginTop: 1 }} variant="contained" color="info" disableElevation onClick={() => pushInput('0')} href="#">
-    0
-  </Button>&nbsp;
   <Button sx={{ marginTop: 1 }} variant="contained" color="info" disableElevation onClick={() => pushInput('1')} href="#">
     1
   </Button>&nbsp;
@@ -46,9 +43,13 @@ export const CalculatorButtons: FunctionComponent<ButtonsProps> = ({
   <Button sx={{ marginTop: 1 }} variant="contained" color="info" disableElevation onClick={() => pushInput('9')} href="#">
     9
   </Button>&nbsp;
+  <Button sx={{ marginTop: 1 }} variant="contained" color="info" disableElevation onClick={() => pushInput('0')} href="#">
+    0
+  </Button>&nbsp;
   <Button sx={{ marginTop: 1 }} variant="contained" color="info" disableElevation onClick={() => pushInput('.')} href="#">
     .
   </Button>&nbsp;
+  <br/>
   <Button sx={{ marginTop: 1 }} variant="contained" color="secondary" disableElevation onClick={() => pushAction('add')} href="#">
     +
   </Button>&nbsp;
@@ -69,11 +70,12 @@ export const CalculatorButtons: FunctionComponent<ButtonsProps> = ({
   </Button>&nbsp;
   <Button sx={{ marginTop: 1 }} variant="contained" color="primary" disableElevation onClick={compute} href="#">
     =
-  </Button>
+  </Button>&nbsp;
 </Container>)
 
 const Container = styled.div`
   width: 98.5%;
   height: 200px;
   margin: auto;
+  text-align: right;
 `;

@@ -15,8 +15,7 @@ export const Calculator: FunctionComponent = () => {
 }
 
 const Container = styled.div`
-  width: 700px;
-  height: 300px;
+  width: 280px;
   background: ${white};
   display: flex;
   flex-direction: column;

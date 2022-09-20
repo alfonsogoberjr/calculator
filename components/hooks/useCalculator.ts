@@ -13,7 +13,16 @@ export enum Operations {
   ADD = "add",
   SUBTRACT = "subtract",
   MULTIPLY = "multiply",
-  DIVIDE = "divide"
+  DIVIDE = "divide",
+  MODULO = "modulo"
+}
+
+const Symbols = {
+  add: "+",
+  subtract: "-",
+  multiply: "x",
+  divide: "/",
+  modulo: "%"
 }
 
 export const useCalculator = () => {
@@ -35,6 +44,7 @@ export const useCalculator = () => {
       setAction(value)
       setInputs([input])
       setResult(Number(input))
+      setInput(`${input} ${Symbols[value]} `)
     } else {
       compute()
       setAction(value)
@@ -44,7 +54,7 @@ export const useCalculator = () => {
   const pushInput = useCallback((value: string) => {
     if (!!action) setInput(value)
     else setInput(concat(input, value))
-  }, [action, input])
+  }, [action, input, inputs])
 
   const clearInput: MouseEventHandler = () => {
     setInput('')
@@ -54,15 +64,14 @@ export const useCalculator = () => {
   }
 
   const compute = useCallback(() => {
-    if (inputs.length === 1 && !!action) {
+    if (inputs.length && !!action) {
       const res = computeFns[`${action}Action`](Number(input))
-      console.log(input, inputs, action, res)
       setResult(res)
       setInput(String(res))
       setInputs([res])
       setAction(null)
     }
-  }, [inputs, input, action])
+  }, [inputs, input, action, result])
 
   return {
     pushAction,

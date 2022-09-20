@@ -37,6 +37,7 @@ export const useCalculator = () => {
       setResult(Number(input))
     } else {
       compute()
+      setAction(value)
     }
   }, [input, inputs, action])
 

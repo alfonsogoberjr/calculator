@@ -5,6 +5,7 @@ import {
   subtract,
   multiply,
   divide,
+  modulo,
   concat
 } from 'ramda'
 
@@ -25,7 +26,8 @@ export const useCalculator = () => {
     addAction: useCallback((value: number) => add(result, value), [result]),
     subtractAction: useCallback((value: number) => subtract(result, value), [result]),
     multiplyAction: useCallback((value: number) => multiply(result, value), [result]),
-    divideAction: useCallback((value: number) => divide(result, value), [result])
+    divideAction: useCallback((value: number) => divide(result, value), [result]),
+    moduloAction: useCallback((value: number) => modulo(result, value), [result])
   }
 
   const pushAction = useCallback((value: Operations) => {

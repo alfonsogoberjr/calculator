@@ -61,6 +61,9 @@ export const CalculatorButtons: FunctionComponent<ButtonsProps> = ({
   <Button sx={{ marginTop: 1 }} variant="contained" color="secondary" disableElevation onClick={() => pushAction('divide')} href="#">
     ÷
   </Button>&nbsp;
+  <Button sx={{ marginTop: 1 }} variant="contained" color="secondary" disableElevation onClick={() => pushAction('modulo')} href="#">
+    %
+  </Button>&nbsp;
   <Button sx={{ marginTop: 1 }} variant="contained" color="secondary" disableElevation onClick={clearInput} href="#">
     AC
   </Button>&nbsp;

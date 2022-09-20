@@ -2,6 +2,8 @@
 
 A simple calculator to demonstrate use of React + Typescript + hooks + other good stuff.
 
+[Live Demo](https://jocular-buttercream-193db0.netlify.app)
+
 ## Getting Started
 
 First, run the development server:

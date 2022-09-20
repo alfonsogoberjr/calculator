@@ -2,15 +2,15 @@ import { FunctionComponent, ReactNode } from "react";
 import Head from "next/head";
 import { createTheme, ThemeProvider } from "@mui/material";
 import { Arial } from "@components/fonts";
-import { blue, grey, lightGrey } from '@components/colors';
+import { blue, grey, lightGrey } from "@components/colors";
 
 const theme = createTheme({
   typography: {
-    fontFamily: Arial,
+    fontFamily: Arial
   },
   palette: {
     primary: {
-      main: blue,
+      main: blue
     },
     secondary: {
       main: grey
@@ -18,7 +18,7 @@ const theme = createTheme({
     info: {
       main: lightGrey
     }
-  },
+  }
 });
 
 type MetaTag = {
@@ -42,7 +42,7 @@ export const Page: FunctionComponent<PageProps> = ({
   description,
   keywords,
   metaTags,
-  showFooter = true,
+  showFooter = true
 }: PageProps) => {
   return (
     <div className="container">
@@ -53,18 +53,9 @@ export const Page: FunctionComponent<PageProps> = ({
         ))}
         <meta
           name="description"
-          content={
-            description ??
-            "A simple calculator"
-          }
+          content={description ?? "A simple calculator"}
         />
-        <meta
-          name="keywords"
-          content={
-            keywords ??
-            "calculator"
-          }
-        />
+        <meta name="keywords" content={keywords ?? "calculator"} />
         <link rel="icon" href="/favicon.ico" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />

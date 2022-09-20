@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { black} from "@components/colors";
+import { black } from "@components/colors";
 import { small, xSmall } from "@components/media";
 import { Arial } from "./fonts";
 

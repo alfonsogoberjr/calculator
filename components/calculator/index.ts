@@ -1,3 +1,3 @@
-export * from "./Calculator"
-export * from "./CalculatorButtons"
-export * from "./CalculatorScreen"
+export * from "./Calculator";
+export * from "./CalculatorButtons";
+export * from "./CalculatorScreen";

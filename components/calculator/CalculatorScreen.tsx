@@ -1,12 +1,26 @@
-import { FunctionComponent, useRef, useState, useEffect } from "react";
+import { FunctionComponent } from "react";
 import styled from "@emotion/styled";
 import { grey, blue } from "../colors";
 
 export type CalculatorScreenProps = {
+  pushInput: (value: string) => void;
   value: string;
-}
+};
 
-export const CalculatorScreen: FunctionComponent<CalculatorScreenProps> = ({ value }) => (<Container>{value}</Container>)
+export const CalculatorScreen: FunctionComponent<CalculatorScreenProps> = ({
+  pushInput,
+  value
+}) => {
+  return (
+    <Container
+      id={"screen"}
+      tabIndex={0}
+      onKeyDown={e => pushInput(e.key as string)}
+    >
+      {value}
+    </Container>
+  );
+};
 
 const Container = styled.div`
   width: 98.5%;

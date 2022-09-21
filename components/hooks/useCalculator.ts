@@ -8,7 +8,8 @@ import {
   multiply,
   divide,
   modulo,
-  concat
+  concat,
+  map
 } from "ramda";
 import isNumber from "is-number";
 
@@ -32,8 +33,9 @@ const Symbols = {
 export const useCalculator = () => {
   const [action, setAction] = useState<Operations | null>();
   const [input, setInput] = useState<string>("");
-  const [inputs, setInputs] = useState<string[]>([]);
+  const [inputs, setInputs] = useState<number[]>([]);
   const [result, setResult] = useState<number>(0);
+  const [negModifier, setNegModifier] = useState<boolean>(false);
 
   const computeFns = {
     addAction: useCallback((value: number) => add(result, value), [result]),
@@ -52,8 +54,13 @@ export const useCalculator = () => {
   };
 
   useEffect(() => {
-    if (/\s/.test(input)) setInputs(pipe(split(" "), filter(isNumber))(input));
+    if (input) console.log('input', input)
+    if (/\s/.test(input)) setInputs(pipe(split(" "), filter(isNumber), map(Number))(input));
   }, [input]);
+
+  useEffect(() => {
+    if (inputs) console.log('inputs', inputs)
+  }, [inputs]);
 
   const validateKeyPress = (key: string) =>
     isNumber(key) || /^(\+|-|\/|\*|x|%|\.|Enter|=|Backspace)$/.test(key);
@@ -62,19 +69,25 @@ export const useCalculator = () => {
     (value: Operations) => {
       if (inputs.length === 2 && !!action) {
         compute();
+      } else if (value === Operations.SUBTRACT && (!!action || !inputs.length) && !negModifier) {
+        setNegModifier(true);
+        setInput(`${input} ${Symbols[value]}`);
       } else if (input.length) {
         setResult(Number(input));
         setInput(`${input} ${Symbols[value]} `);
+        setAction(value);
       }
-      setAction(value);
     },
-    [input, inputs, action]
+    [input, inputs, action, result, negModifier]
   );
 
   const pushInput = useCallback(
     (value: string) => {
       if (validateKeyPress(value)) {
-        if (value === Symbols.add) {
+        if (isNumber(value)) {
+          setInput(concat(input, value));
+          document.getElementById("screen").focus();
+        } else if (value === Symbols.add) {
           pushAction(Operations.ADD);
         } else if (value === Symbols.subtract) {
           pushAction(Operations.SUBTRACT);
@@ -90,13 +103,10 @@ export const useCalculator = () => {
           compute();
         } else if (value === "Backspace") {
           setInput(input.slice(0, -1));
-        } else {
-          setInput(concat(input, value));
-          document.getElementById("screen").focus();
         }
       }
     },
-    [input]
+    [input, inputs, action]
   );
 
   const clearInput: MouseEventHandler = () => {
@@ -111,7 +121,9 @@ export const useCalculator = () => {
       const res: number = computeFns[`${action}Action`](Number(inputs[1]));
       setResult(res);
       setInput(String(res));
-      setInputs([String(res)]);
+      setInputs([res]);
+      setAction(null);
+      setNegModifier(false);
     }
   }, [inputs, input, action, result]);
 

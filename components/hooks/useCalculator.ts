@@ -54,13 +54,8 @@ export const useCalculator = () => {
   };
 
   useEffect(() => {
-    if (input) console.log('input', input)
     if (/\s/.test(input)) setInputs(pipe(split(" "), filter(isNumber), map(Number))(input));
   }, [input]);
-
-  useEffect(() => {
-    if (inputs) console.log('inputs', inputs)
-  }, [inputs]);
 
   const validateKeyPress = (key: string) =>
     isNumber(key) || /^(\+|-|\/|\*|x|%|\.|Enter|=|Backspace)$/.test(key);
@@ -72,13 +67,13 @@ export const useCalculator = () => {
       } else if (value === Operations.SUBTRACT && (!!action || !inputs.length) && !negModifier) {
         setNegModifier(true);
         setInput(`${input} ${Symbols[value]}`);
-      } else if (input.length) {
+      } else if (!!input?.length) {
         setResult(Number(input));
         setInput(`${input} ${Symbols[value]} `);
         setAction(value);
       }
     },
-    [input, inputs, action, result, negModifier]
+    [input, inputs, action, negModifier]
   );
 
   const pushInput = useCallback(
@@ -91,15 +86,13 @@ export const useCalculator = () => {
           pushAction(Operations.ADD);
         } else if (value === Symbols.subtract) {
           pushAction(Operations.SUBTRACT);
-        } else if (value === Symbols.multiply || value === "*") {
+        } else if ((value === Symbols.multiply) || (value === "*")) {
           pushAction(Operations.MULTIPLY);
         } else if (value === Symbols.divide) {
           pushAction(Operations.DIVIDE);
         } else if (value === Symbols.modulo) {
           pushAction(Operations.MODULO);
-        } else if (value === "Enter") {
-          compute();
-        } else if (value === Symbols.equals) {
+        } else if ((value === "Enter") || (value === Symbols.equals)) {
           compute();
         } else if (value === "Backspace") {
           setInput(input.slice(0, -1));
@@ -125,7 +118,7 @@ export const useCalculator = () => {
       setAction(null);
       setNegModifier(false);
     }
-  }, [inputs, input, action, result]);
+  }, [input, inputs, action, result]);
 
   return {
     pushAction,

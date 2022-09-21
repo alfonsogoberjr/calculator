@@ -1,5 +1,15 @@
 import { useEffect, useCallback, useState, MouseEventHandler } from "react";
-import { pipe, split, filter, add, subtract, multiply, divide, modulo, concat } from "ramda";
+import {
+  pipe,
+  split,
+  filter,
+  add,
+  subtract,
+  multiply,
+  divide,
+  modulo,
+  concat
+} from "ramda";
 import isNumber from "is-number";
 
 export enum Operations {
@@ -15,7 +25,8 @@ const Symbols = {
   subtract: "-",
   multiply: "x",
   divide: "/",
-  modulo: "%"
+  modulo: "%",
+  equals: "="
 };
 
 export const useCalculator = () => {
@@ -41,54 +52,51 @@ export const useCalculator = () => {
   };
 
   useEffect(() => {
-    if (/\s/.test(input)) {
-      console.log(pipe(split(' '), filter(isNumber))(input))
-      setInputs(pipe(split(' '), filter(isNumber))(input))
-    }
-  }, [input])
+    if (/\s/.test(input)) setInputs(pipe(split(" "), filter(isNumber))(input));
+  }, [input]);
 
-  const validateKeyPress = (key: string) => /^(\+|-|\/|\*|x|%|\.|Enter|=|Backspace)$/.test(key)
+  const validateKeyPress = (key: string) =>
+    isNumber(key) || /^(\+|-|\/|\*|x|%|\.|Enter|=|Backspace)$/.test(key);
 
   const pushAction = useCallback(
     (value: Operations) => {
-      if (!action) {
-        setAction(value);
+      if (inputs.length === 2 && !!action) {
+        compute();
+      } else if (input.length) {
         setResult(Number(input));
         setInput(`${input} ${Symbols[value]} `);
-      } else {
-        compute();
-        setAction(value);
       }
+      setAction(value);
     },
     [input, inputs, action]
   );
 
   const pushInput = useCallback(
     (value: string) => {
-      if (value === '+') {
-        pushAction(Operations.ADD)
-      } else if (value === '-') {
-        pushAction(Operations.SUBTRACT)
-      } else if (value === '*') {
-        pushAction(Operations.MULTIPLY)
-      } else if (value === 'x') {
-        pushAction(Operations.MULTIPLY)
-      } else if (value === '/') {
-        pushAction(Operations.DIVIDE)
-      } else if (value === '%') {
-        pushAction(Operations.MODULO)
-      } else if (value === 'Enter') {
-        compute()
-      } else if (value === '=') {
-        compute()
-      } else if (value === 'Backspace') {
-        setInput(input.slice(0, -1))
-      } else {
-        setInput(concat(input, value));
-        document.getElementById('screen').focus()
-      } 
+      if (validateKeyPress(value)) {
+        if (value === Symbols.add) {
+          pushAction(Operations.ADD);
+        } else if (value === Symbols.subtract) {
+          pushAction(Operations.SUBTRACT);
+        } else if (value === Symbols.multiply || value === "*") {
+          pushAction(Operations.MULTIPLY);
+        } else if (value === Symbols.divide) {
+          pushAction(Operations.DIVIDE);
+        } else if (value === Symbols.modulo) {
+          pushAction(Operations.MODULO);
+        } else if (value === "Enter") {
+          compute();
+        } else if (value === Symbols.equals) {
+          compute();
+        } else if (value === "Backspace") {
+          setInput(input.slice(0, -1));
+        } else {
+          setInput(concat(input, value));
+          document.getElementById("screen").focus();
+        }
+      }
     },
-    [action, input, inputs]
+    [input]
   );
 
   const clearInput: MouseEventHandler = () => {
@@ -100,12 +108,10 @@ export const useCalculator = () => {
 
   const compute = useCallback(() => {
     if (inputs.length === 2 && !!action) {
-      const res = computeFns[`${action}Action`](Number(inputs[1]));
-      console.log(inputs, input, action, res)
+      const res: number = computeFns[`${action}Action`](Number(inputs[1]));
       setResult(res);
       setInput(String(res));
-      setInputs([res]);
-      setAction(null);
+      setInputs([String(res)]);
     }
   }, [inputs, input, action, result]);
 

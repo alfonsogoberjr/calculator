@@ -10,6 +10,10 @@ import GithubIcon from "../media/GithubIcon";
 export const Calculator: FunctionComponent = () => {
   const { input, pushInput, ...calculatorProps } = useCalculator();
 
+  useEffect(() => {
+    document.getElementById("screen").focus()
+  }, [])
+
   return (
     <Container>
       <Typography sx={{ marginBottom: 2, color: black }} variant="h3">

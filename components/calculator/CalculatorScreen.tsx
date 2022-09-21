@@ -16,6 +16,7 @@ export const CalculatorScreen: FunctionComponent<CalculatorScreenProps> = ({
       id={"screen"}
       tabIndex={0}
       onKeyDown={e => pushInput(e.key as string)}
+      onMouseDown={e => document.getElementById("screen").focus()}
     >
       {value}
     </Container>
@@ -23,6 +24,7 @@ export const CalculatorScreen: FunctionComponent<CalculatorScreenProps> = ({
 };
 
 const Container = styled.div`
+  cursor: text;
   width: 98.5%;
   height: 72px;
   border: 1px solid ${blue};

@@ -18,7 +18,8 @@ export enum Operations {
   SUBTRACT = "subtract",
   MULTIPLY = "multiply",
   DIVIDE = "divide",
-  MODULO = "modulo"
+  MODULO = "modulo",
+  EQUALS = "equals"
 }
 
 const Symbols = {
@@ -35,7 +36,6 @@ export const useCalculator = () => {
   const [input, setInput] = useState<string>("");
   const [inputs, setInputs] = useState<number[]>([]);
   const [result, setResult] = useState<number>(0);
-  const [negModifier, setNegModifier] = useState<boolean>(false);
 
   const computeFns = {
     addAction: useCallback((value: number) => add(result, value), [result]),
@@ -57,24 +57,18 @@ export const useCalculator = () => {
     if (/\s/.test(input)) setInputs(pipe(split(" "), filter(isNumber), map(Number))(input));
   }, [input]);
 
+  useEffect(() => {
+    if (action === Operations.EQUALS) compute()
+    else compute(Symbols[action as string])
+  }, [action])
+
   const validateKeyPress = (key: string) =>
     isNumber(key) || /^(\+|-|\/|\*|x|%|\.|Enter|=|Backspace)$/.test(key);
 
-  const pushAction = useCallback(
-    (value: Operations) => {
-      if (inputs.length === 2 && !!action) {
-        compute();
-      } else if (value === Operations.SUBTRACT && (!!action || !inputs.length) && !negModifier) {
-        setNegModifier(true);
-        setInput(`${input} ${Symbols[value]}`);
-      } else if (!!input?.length) {
-        setResult(Number(input));
-        setInput(`${input} ${Symbols[value]} `);
-        setAction(value);
-      }
-    },
-    [input, inputs, action, negModifier]
-  );
+  const updateInput = useCallback((value: Operations) => {
+    setInput(`${input} ${value} `);
+    setResult(Number(input));
+  }, [input])
 
   const pushInput = useCallback(
     (value: string) => {
@@ -82,24 +76,31 @@ export const useCalculator = () => {
         if (isNumber(value)) {
           setInput(concat(input, value));
           document.getElementById("screen").focus();
-        } else if (value === Symbols.add) {
-          pushAction(Operations.ADD);
-        } else if (value === Symbols.subtract) {
-          pushAction(Operations.SUBTRACT);
-        } else if ((value === Symbols.multiply) || (value === "*")) {
-          pushAction(Operations.MULTIPLY);
-        } else if (value === Symbols.divide) {
-          pushAction(Operations.DIVIDE);
-        } else if (value === Symbols.modulo) {
-          pushAction(Operations.MODULO);
-        } else if ((value === "Enter") || (value === Symbols.equals)) {
-          compute();
-        } else if (value === "Backspace") {
-          setInput(input.slice(0, -1));
+        } else {
+          if (value === Symbols.add) {
+            setAction(Operations.ADD);
+            updateInput(value as Operations)
+          } else if (value === Symbols.subtract) {
+            setAction(Operations.SUBTRACT);
+            updateInput(value as Operations)
+          } else if ((value === Symbols.multiply) || (value === "*")) {
+            setAction(Operations.MULTIPLY);
+            updateInput(value as Operations)
+          } else if (value === Symbols.divide) {
+            setAction(Operations.DIVIDE);
+            updateInput(value as Operations)
+          } else if (value === Symbols.modulo) {
+            setAction(Operations.MODULO);
+            updateInput(value as Operations)
+          } else if ((value === "Enter") || (value === Symbols.equals)) {
+            setAction(Operations.EQUALS);
+          } else if (value === "Backspace") {
+            setInput(input.slice(0, -1));
+          }
         }
       }
     },
-    [input, inputs, action]
+    [input, inputs]
   );
 
   const clearInput: MouseEventHandler = () => {
@@ -109,19 +110,18 @@ export const useCalculator = () => {
     setResult(0);
   };
 
-  const compute = useCallback(() => {
+  const compute = useCallback((newAction?: Operations) => {
     if (inputs.length === 2 && !!action) {
       const res: number = computeFns[`${action}Action`](Number(inputs[1]));
+      console.log(res)
       setResult(res);
-      setInput(String(res));
+      setInput(newAction ? `${String(res)} ${newAction} ` : String(res));
       setInputs([res]);
       setAction(null);
-      setNegModifier(false);
     }
   }, [input, inputs, action, result]);
 
   return {
-    pushAction,
     pushInput,
     input,
     clearInput,

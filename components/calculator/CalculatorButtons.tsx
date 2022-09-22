@@ -4,9 +4,8 @@ import { grey, blue } from "../colors";
 import { Button, ButtonTypeMap } from "@mui/material";
 
 export type ButtonsProps = {
-  pushAction: Function;
   pushInput: Function;
-  compute: MouseEventHandler;
+  compute: Function;
   clearInput: MouseEventHandler;
 };
 
@@ -20,7 +19,6 @@ const globalButtonProps: ButtonTypeMap<{}, "button"> = ({
 
 export const CalculatorButtons: FunctionComponent<ButtonsProps> = ({
   pushInput,
-  pushAction,
   compute,
   clearInput
 }) => (
@@ -47,35 +45,35 @@ export const CalculatorButtons: FunctionComponent<ButtonsProps> = ({
     <br />
     <Button
       {...{ ...globalButtonProps, color: "secondary" }}
-      onClick={() => pushAction("add")}
+      onClick={() => pushInput("+")}
     >
       +
     </Button>
 
     <Button
       {...{ ...globalButtonProps, color: "secondary" }}
-      onClick={() => pushAction("subtract")}
+      onClick={() => pushInput("-")}
     >
       -
     </Button>
 
     <Button
       {...{ ...globalButtonProps, color: "secondary" }}
-      onClick={() => pushAction("multiply")}
+      onClick={() => pushInput("x")}
     >
       x
     </Button>
 
     <Button
       {...{ ...globalButtonProps, color: "secondary" }}
-      onClick={() => pushAction("divide")}
+      onClick={() => pushInput("/")}
     >
       ÷
     </Button>
 
     <Button
       {...{ ...globalButtonProps, color: "secondary" }}
-      onClick={() => pushAction("modulo")}
+      onClick={() => pushInput("%")}
     >
       %
     </Button>
@@ -87,7 +85,7 @@ export const CalculatorButtons: FunctionComponent<ButtonsProps> = ({
       AC
     </Button>
 
-    <Button {...{ ...globalButtonProps, color: "primary" }} onClick={compute}>
+    <Button {...{ ...globalButtonProps, color: "primary" }} onClick={() => compute()}>
       =
     </Button>
   </Container>
